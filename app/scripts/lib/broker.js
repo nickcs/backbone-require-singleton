@@ -18,6 +18,7 @@ define(['underscore', 'backbone'], function (_, Backbone) {
                 this.queue.forEach(function(args){
                     this.trigger.apply(this, args);
                 }.bind(this));
+                this.queue = [];
             }
         },
 
