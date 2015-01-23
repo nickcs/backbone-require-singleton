@@ -23,6 +23,7 @@ require.config({
         backbone: '../bower_components/backbone/backbone',
         underscore: '../bower_components/lodash/dist/lodash',
         bootstrap: '../bower_components/sass-bootstrap/dist/js/bootstrap',
-        composer: '../bower_components/backbone.composer/backbone.composer'
+        composer: '../bower_components/backbone.composer/backbone.composer',
+        broker: 'broker'
     }
 });

@@ -5,8 +5,8 @@ define([
     'underscore',
     'backbone',
     'templates',
-    'session'
-], function ($, _, Backbone, JST, session) {
+    'broker'
+], function ($, _, Backbone, JST, broker) {
     'use strict';
 
     var NavView = Backbone.View.extend({
@@ -15,14 +15,23 @@ define([
         items: [],
 
         initialize: function() {
-            session.on('nav:register', this.registerItem, this);
+            broker.channel('nav').subscribe('register', this.registerItem, this);
+            Backbone.history.on('route', this.highlightNavItem, this);
         },
 
-        registerItem: function(item) {
-            this.items.push(item);
-            this.$el.append(item.template);
+        registerItem: function(navItem) {
+            this.items.push(navItem);
+            this.$('ul').append(navItem.render().el);
+        },
+
+        highlightNavItem: function(router, route, params) {
+            this.items.forEach(function(item){
+                item.selected(item.handler === route);
+            });
         }
+
+
     });
 
-    return NavView;
+    return new NavView().render();
 });

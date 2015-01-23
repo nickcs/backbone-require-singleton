@@ -2,34 +2,35 @@
 
 define([
     'jquery',
+    'underscore',
     'backbone',
-    'session',
+    'broker',
+    '../views/nav-item',
     '../views/home',
     '../views/about'
-], function ($, Backbone, session, HomeView, AboutView) {
+], function ($, _, Backbone, broker, NavItemView, HomeView, AboutView) {
     'use strict';
 
     var MainRouter = Backbone.Router.extend({
-        routes: {
-            '': 'showHome',
-            'about': 'showAbout'
-        },
 
         initialize: function() {
-            // session.on('app:started', function() {
-            //     session.trigger('nav:register', {
-            //         template: '<li class="active"><a href="#">Home</a></li>',
-            //         route: ''
-            //     });
-            // });
+            var navItems = [
+                new NavItemView('Home','','showHome'),
+                new NavItemView('About','about','showAbout')
+            ];
+
+            navItems.forEach(function(item){
+                this.route(item.route, item.handler);
+                broker.channel('nav').publish('register', item);
+            }.bind(this));
         },
 
         showHome: function(){
-            session.trigger('container:show', new HomeView());
+            broker.channel('container').publish('show', new HomeView());
         },
 
         showAbout: function(){
-            session.trigger('container:show', new AboutView());
+            broker.channel('container').publish('show', new AboutView());
         }
 
     });

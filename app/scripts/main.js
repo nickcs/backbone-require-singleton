@@ -1,10 +1,10 @@
 'use strict';
 define([
     'backbone',
-    'session',
+    'broker',
     'views/nav',
     'views/footer'
-], function (Backbone, session, NavView, FooterView) {
+], function (Backbone, broker, navView, FooterView) {
 
     Backbone.View.prototype.attachToTemplate = true;
 
@@ -14,15 +14,14 @@ define([
     var body = new Backbone.View();
 
     // build structure of the container view
-    container.addSubView({view: new NavView()});
+    container.addSubView({view: navView});
     container.addSubView({view: body});
     container.addSubView({view: new FooterView()});
 
-    session.on('container:show', function(view){
+    broker.channel('container').subscribe('show', function(view){
         body.setView(view);
     });
 
+    broker.start();
     Backbone.history.start();
-
-    session.trigger('app:started');
 });
