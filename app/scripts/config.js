@@ -7,14 +7,15 @@ require.config({
         'underscore',
         'backbone',
         'composer',
+        'broker',
         'home/router',
         'about/router',
         'app/app'
     ],
-    callback: function() {
+    callback: function($, _, Backbone, composer, broker, homeRouter, aboutRouter, app) {
         // wait for all the dependent modules (specifically the routers) to load
         // before starting history service
-        Backbone.history.start();
+        broker.channel('app').publish('loaded');
     },
     shim: {
         bootstrap: {

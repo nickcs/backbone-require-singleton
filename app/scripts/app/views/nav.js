@@ -5,9 +5,11 @@ define([
     'underscore',
     'backbone',
     'templates',
+    'broker',
+    'session',
     '../collections/nav-items',
     './nav-item'
-], function ($, _, Backbone, JST, NavCollection, NavItemView) {
+], function ($, _, Backbone, JST, broker, session, NavCollection, NavItemView) {
     'use strict';
 
     var NavView = Backbone.View.extend({
@@ -18,6 +20,7 @@ define([
 
             this.listenTo(this.collection, 'reset', this.removeSubViews);
             this.listenTo(this.collection, 'add', this.loadItems);
+            broker.channel('session').subscribe('login', this.loadItems, this);
             Backbone.history.on('route', this.highlightNavItem, this);
         },
 
@@ -27,26 +30,34 @@ define([
         },
 
         addNavItem: function(navItem) {
-            this.addSubView({
-                view: new NavItemView({model: navItem}),
-                selector: 'ul',
-                location: 'preprend'
-            });
+            if (session.isLoggedIn()) {
+                this.addSubView({
+                    view: new NavItemView({model: navItem}),
+                    selector: 'ul',
+                    location: 'preprend'
+                });
+            }
         },
 
         getSubViewForModel: function(model) {
             var subView = _.find(this._subViews, function(subView) {
               return (subView.view.model && subView.view.model === model);
             });
-            return subView.view;
+            if (subView) {
+                return subView.view;
+            }
+            return subView;
         },
 
         highlightNavItem: function(router, route, params) {
             this.collection.forEach(function(item){
-                this.getSubViewForModel(item).selected(item.get('handler') === route);
+                var view = this.getSubViewForModel(item);
+                if (view) {
+                    view.selected(item.get('handler') === route);
+                }
             }, this);
         }
     });
 
-    return new NavView().render();
+    return NavView;
 });
