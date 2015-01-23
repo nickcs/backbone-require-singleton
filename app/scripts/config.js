@@ -3,11 +3,19 @@
 
 require.config({
     deps: [
+        'jquery',
+        'underscore',
+        'backbone',
         'composer',
         'home/router',
         'about/router',
         'app/app'
     ],
+    callback: function() {
+        // wait for all the dependent modules (specifically the routers) to load
+        // before starting history service
+        Backbone.history.start();
+    },
     shim: {
         bootstrap: {
             deps: ['jquery'],
