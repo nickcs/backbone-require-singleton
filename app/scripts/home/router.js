@@ -10,7 +10,7 @@ define([
 
         initialize: function() {
 
-            var navItem = new NavItemView('Home','','showHome');
+            var navItem = new NavItemView('Home','','showHome',0);
 
             this.route(navItem.route, navItem.handler);
             broker.channel('nav').publish('register', navItem);

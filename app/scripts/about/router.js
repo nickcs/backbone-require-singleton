@@ -11,7 +11,7 @@ define([
     var MainRouter = Backbone.Router.extend({
 
         initialize: function() {
-            var navItem = new NavItemView('About','about','showAbout');
+            var navItem = new NavItemView('About','about','showAbout',10);
 
             this.route(navItem.route, navItem.handler);
             broker.channel('nav').publish('register', navItem);

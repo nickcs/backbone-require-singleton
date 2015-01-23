@@ -19,9 +19,25 @@ define([
             Backbone.history.on('route', this.highlightNavItem, this);
         },
 
+        sortNavItems: function() {
+            return this.items.sort(function(a,b){
+                if (a.zindex < b.zindex) {
+                    return -1;
+                }
+                if (a.zindex > b.zindex) {
+                    return 1;
+                }
+                return 0;
+            }).map(function(item){
+                return item.render().$el;
+            });
+        },
+
         registerItem: function(navItem) {
             this.items.push(navItem);
-            this.$('ul').append(navItem.render().el);
+            this.$('ul').empty();
+
+            this.$('ul').append(this.sortNavItems());
         },
 
         highlightNavItem: function(router, route, params) {
