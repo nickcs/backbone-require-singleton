@@ -26,7 +26,7 @@ require.config({
         bootstrap: '../bower_components/sass-bootstrap/dist/js/bootstrap',
         composer: '../bower_components/backbone.composer/backbone.composer',
         'nav-item': 'app/views/nav-item',
-        broker: 'app/lib/broker',
+        broker: 'lib/broker',
         session: 'app/lib/session'
     }
 });
