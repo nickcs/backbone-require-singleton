@@ -5,48 +5,47 @@ define([
     'underscore',
     'backbone',
     'templates',
-    'broker'
-], function ($, _, Backbone, JST, broker) {
+    '../collections/nav-items',
+    './nav-item'
+], function ($, _, Backbone, JST, NavCollection, NavItemView) {
     'use strict';
 
     var NavView = Backbone.View.extend({
         template: JST['app/scripts/app/templates/nav.ejs'],
 
-        items: [],
-
         initialize: function() {
-            broker.channel('nav').subscribe('register', this.registerItem, this);
+            this.collection = new NavCollection();
+
+            this.listenTo(this.collection, 'reset', this.removeSubViews);
+            this.listenTo(this.collection, 'add', this.loadItems);
             Backbone.history.on('route', this.highlightNavItem, this);
         },
 
-        sortNavItems: function() {
-            return this.items.sort(function(a,b){
-                if (a.zindex < b.zindex) {
-                    return -1;
-                }
-                if (a.zindex > b.zindex) {
-                    return 1;
-                }
-                return 0;
-            }).map(function(item){
-                return item.render().$el;
+        loadItems: function() {
+            this.removeSubViews();
+            this.collection.forEach(this.addNavItem,this);
+        },
+
+        addNavItem: function(navItem) {
+            this.addSubView({
+                view: new NavItemView({model: navItem}),
+                selector: 'ul',
+                location: 'preprend'
             });
         },
 
-        registerItem: function(navItem) {
-            this.items.push(navItem);
-            this.$('ul').empty();
-
-            this.$('ul').append(this.sortNavItems());
+        getSubViewForModel: function(model) {
+            var subView = _.find(this._subViews, function(subView) {
+              return (subView.view.model && subView.view.model === model);
+            });
+            return subView.view;
         },
 
         highlightNavItem: function(router, route, params) {
-            this.items.forEach(function(item){
-                item.selected(item.handler === route);
-            });
+            this.collection.forEach(function(item){
+                this.getSubViewForModel(item).selected(item.get('handler') === route);
+            }, this);
         }
-
-
     });
 
     return new NavView().render();

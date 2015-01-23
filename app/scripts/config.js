@@ -25,7 +25,6 @@ require.config({
         underscore: '../bower_components/lodash/dist/lodash',
         bootstrap: '../bower_components/sass-bootstrap/dist/js/bootstrap',
         composer: '../bower_components/backbone.composer/backbone.composer',
-        'nav-item': 'app/views/nav-item',
         broker: 'lib/broker',
         session: 'app/lib/session'
     }

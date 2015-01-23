@@ -3,18 +3,20 @@
 define([
     'backbone',
     'broker',
-    'nav-item',
     './views/about'
-], function (Backbone, broker, NavItemView, AboutView) {
+], function (Backbone, broker, AboutView) {
     'use strict';
 
-    var MainRouter = Backbone.Router.extend({
+    var AboutRouter = Backbone.Router.extend({
 
         initialize: function() {
-            var navItem = new NavItemView('About','about','showAbout',10);
-
-            this.route(navItem.route, navItem.handler);
-            broker.channel('nav').publish('register', navItem);
+            broker.channel('nav').publish('register', {
+                title: 'About',
+                route: 'about',
+                handler: 'showAbout',
+                zindex: 10
+            });
+            this.route('about', 'showAbout');
         },
 
         showAbout: function(){
@@ -23,5 +25,5 @@ define([
 
     });
 
-    return new MainRouter();
+    return new AboutRouter();
 });

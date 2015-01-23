@@ -1,19 +1,20 @@
 define([
     'backbone',
     'broker',
-    'nav-item',
     './views/home'
-], function (Backbone, broker, NavItemView, HomeView) {
+], function (Backbone, broker, HomeView) {
     'use strict';
 
-    var MainRouter = Backbone.Router.extend({
+    var HomeRouter = Backbone.Router.extend({
 
         initialize: function() {
-
-            var navItem = new NavItemView('Home','','showHome',0);
-
-            this.route(navItem.route, navItem.handler);
-            broker.channel('nav').publish('register', navItem);
+            broker.channel('nav').publish('register', {
+                title: 'Home',
+                route: '',
+                handler: 'showHome',
+                zindex: 0
+            });
+            this.route('', 'showHome');
         },
 
         showHome: function(){
@@ -22,5 +23,5 @@ define([
 
     });
 
-    return new MainRouter();
+    return new HomeRouter();
 });
