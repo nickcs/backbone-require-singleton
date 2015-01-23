@@ -4,8 +4,8 @@
 require.config({
     deps: [
         'composer',
-        'home/home',
-        'about/about',
+        'home/router',
+        'about/router',
         'app/app'
     ],
     shim: {
