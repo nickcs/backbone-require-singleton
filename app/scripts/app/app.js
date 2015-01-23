@@ -2,8 +2,8 @@
 define([
     'backbone',
     'broker',
-    'views/nav',
-    'views/footer'
+    './views/nav',
+    './views/footer'
 ], function (Backbone, broker, navView, FooterView) {
 
     Backbone.View.prototype.attachToTemplate = true;

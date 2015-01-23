@@ -8,9 +8,9 @@ define([
 ], function ($, _, Backbone, JST) {
     'use strict';
 
-    var HomeView = Backbone.View.extend({
-        template: JST['app/scripts/templates/home.ejs'],
+    var FooterView = Backbone.View.extend({
+        template: JST['app/scripts/app/templates/footer.ejs'],
     });
 
-    return HomeView;
+    return FooterView;
 });

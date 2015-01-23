@@ -9,7 +9,7 @@ define([
     'use strict';
 
     var AboutView = Backbone.View.extend({
-        template: JST['app/scripts/templates/about.ejs'],
+        template: JST['app/scripts/about/templates/about.ejs'],
     });
 
     return AboutView;

@@ -10,7 +10,7 @@ define([
     'use strict';
 
     var NavView = Backbone.View.extend({
-        template: JST['app/scripts/templates/nav.ejs'],
+        template: JST['app/scripts/app/templates/nav.ejs'],
 
         items: [],
 
