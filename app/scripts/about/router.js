@@ -1,13 +1,11 @@
 /*global define*/
 
 define([
-    'jquery',
-    'underscore',
     'backbone',
     'broker',
     'nav-item',
     './views/about'
-], function ($, _, Backbone, broker, NavItemView, AboutView) {
+], function (Backbone, broker, NavItemView, AboutView) {
     'use strict';
 
     var MainRouter = Backbone.Router.extend({
@@ -17,10 +15,6 @@ define([
 
             this.route(navItem.route, navItem.handler);
             broker.channel('nav').publish('register', navItem);
-        },
-
-        showHome: function(){
-            broker.channel('container').publish('show', new HomeView());
         },
 
         showAbout: function(){
