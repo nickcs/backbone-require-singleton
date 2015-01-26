@@ -15,9 +15,9 @@ define([
         return !_.isUndefined(this.get('userId'));
     },
 
-    login: function(userId){
+    login: function(options){
         this.set({
-            userId: userId,
+            userId: options.email,
             accountId : '60',
             accounts  : [{
               name: 'CoSo',
