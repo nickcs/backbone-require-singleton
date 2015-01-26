@@ -12,7 +12,7 @@ define([
     },
 
     isLoggedIn: function() {
-        return (_.isUndefined(this.get('userId')));
+        return !_.isUndefined(this.get('userId'));
     },
 
     login: function(userId){
