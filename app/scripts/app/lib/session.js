@@ -2,59 +2,62 @@ define([
     'jquery',
     'backbone',
     'broker',
-    'jquery.cookie'
-], function($, Backbone, broker, Cookie) {
+    'jquery.cookie',
+    'localstorage'
+], function($, Backbone, broker, Cookie, localstorage) {
     'use strict';
 
-  var Session = Backbone.Model.extend({
-    url: function(){
-      return '/session/continue';
-    },
+    var localStorage = new Backbone.LocalStorage('sessions');
 
-    isLoggedIn: function() {
-        return !_.isUndefined(this.get('userId'));
-    },
+    var SessionModel = Backbone.Model.extend({
+        localStorage: localStorage,
 
-    login: function(options){
-        this.set({
-            userId: options.email,
-            accountId : '60',
-            accounts  : [{
-              name: 'CoSo',
-              accountId: '10'
-            }, {
-              name: 'CSXGM',
-              accountId: '60'
-            }]
-        });
-        broker.channel('session').publish('login',this);
-    },
+        hasCookie: function(){
+            if($.cookie('cookie_name') === ''){
+                return false;
+            }else{
+                this.set('session', $.cookie('cookie_name'));
+                return true;
+            }
+        }
+    });
 
-    logout: function() {
-        this.set({
-            userId: null,
-            accountId: null,
-            accounts: null
-        });
-        broker.channel('session').publish('logout',this);
-    },
+    var Session = Backbone.Collection.extend({
+        localStorage: localStorage,
 
-    hasCookie: function(){
-      if($.cookie('cookie_name') === ''){
-        return false;
-      }else{
-        this.set('session', $.cookie('cookie_name'));
-        return true;
-      }
-    },
+        model: SessionModel,
 
-    parse: function(resp, xhr) {
-      if(resp.success){
-        this.set('session', resp.data.session);
-        this.set('user', resp.data.user);
-      }
-    }
-  });
+        isLoggedIn: function() {
+            return (this.length > 0);
+        },
 
-  return new Session();
+        login: function(options){
+            var model = new SessionModel({
+                userId: options.email,
+                accountId : '60',
+                accounts  : [{
+                  name: 'CoSo',
+                  accountId: '10'
+                }, {
+                  name: 'CSXGM',
+                  accountId: '60'
+                }]
+            });
+            this.add(model);
+            if (options.remember) {
+                model.save();
+            }
+            broker.channel('session').publish('login',this);
+        },
+
+        logout: function() {
+            this.remove(this.models);
+            this.sync();
+            broker.channel('session').publish('logout',this);
+        }
+    });
+
+    var session = new Session();
+    session.fetch();
+    return session;
 });

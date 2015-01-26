@@ -10,7 +10,8 @@
     "requirejs-text": "~2.0.10",
     "modernizr": "~2.7.1",
     "backbone.composer": "~0.2.0",
-    "jquery.cookie": "~1.4.1"
+    "jquery.cookie": "~1.4.1",
+    "backbone.localstorage": "~1.1.16"
   },
   "devDependencies": {}
 }

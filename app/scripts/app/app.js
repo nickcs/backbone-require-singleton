@@ -2,11 +2,12 @@ define([
     'jquery',
     'backbone',
     'broker',
+    'session',
     './views/nav',
     './views/body',
     './views/footer',
     './views/login'
-], function ($, Backbone, broker, NavView, BodyView, FooterView, LoginView) {
+], function ($, Backbone, broker, session, NavView, BodyView, FooterView, LoginView) {
     'use strict';
 
     Backbone.View.prototype.attachToTemplate = true;
@@ -20,7 +21,11 @@ define([
     container.addSubView({view: new FooterView()});
 
     broker.channel('app').subscribe('loaded', function(){
-        broker.channel('container').publish('show', new LoginView());
+        if (session.isLoggedIn()) {
+            broker.channel('session').publish('login',session);
+        } else {
+            broker.channel('container').publish('show', new LoginView());
+        }
     });
 
     broker.channel('session').subscribe('login', function(){

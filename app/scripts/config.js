@@ -8,11 +8,12 @@ require.config({
         'backbone',
         'composer',
         'broker',
+        'session',
         'home/router',
         'about/router',
         'app/app'
     ],
-    callback: function($, _, Backbone, composer, broker, homeRouter, aboutRouter, app) {
+    callback: function($, _, Backbone, composer, broker, session, homeRouter, aboutRouter, app) {
         // wait for all the dependent modules (specifically the routers) to load
         // before starting history service
         broker.channel('app').publish('loaded');
@@ -34,6 +35,7 @@ require.config({
         underscore: '../bower_components/lodash/dist/lodash',
         bootstrap: '../bower_components/sass-bootstrap/dist/js/bootstrap',
         composer: '../bower_components/backbone.composer/backbone.composer',
+        localstorage: '../bower_components/backbone.localstorage/backbone.localStorage',
         broker: 'lib/broker',
         session: 'app/lib/session'
     }
