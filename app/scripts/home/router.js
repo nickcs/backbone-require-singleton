@@ -6,6 +6,9 @@ define([
     'use strict';
 
     var HomeRouter = Backbone.Router.extend({
+        routes: {
+            '': 'showHome'
+        },
 
         initialize: function() {
             broker.channel('nav').publish('register', {
@@ -14,7 +17,6 @@ define([
                 handler: 'showHome',
                 zindex: 0
             });
-            this.route('', 'showHome');
         },
 
         showHome: function(){

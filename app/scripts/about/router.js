@@ -8,6 +8,9 @@ define([
     'use strict';
 
     var AboutRouter = Backbone.Router.extend({
+        routes: {
+            'about': 'showAbout'
+        },
 
         initialize: function() {
             broker.channel('nav').publish('register', {
@@ -17,7 +20,6 @@ define([
                 product: 'about',
                 zindex: 10
             });
-            this.route('about', 'showAbout');
         },
 
         showAbout: function(){

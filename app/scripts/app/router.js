@@ -8,6 +8,9 @@ define([
     'use strict';
 
     var AppRouter = Backbone.Router.extend({
+        routes: {
+            'logout': 'logoutUser'
+        },
 
         initialize: function() {
             broker.channel('nav').publish('register', {
@@ -16,7 +19,6 @@ define([
                 handler: 'logoutUser',
                 zindex: 100
             });
-            this.route('logout', 'logoutUser');
         },
 
         logoutUser: function(){
