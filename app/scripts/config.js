@@ -3,19 +3,16 @@
 
 require.config({
     deps: [
-        'jquery',
-        'underscore',
-        'backbone',
-        'composer',
         'broker',
         'session',
         'home/router',
         'about/router',
+        'app/router',
         'app/app'
     ],
-    callback: function($, _, Backbone, composer, broker, session, homeRouter, aboutRouter, app) {
-        // wait for all the dependent modules (specifically the routers) to load
-        // before starting history service
+    // wait for all the dependent modules (specifically the routers) to load
+    // before starting history service
+    callback: function(broker) {
         broker.channel('app').publish('loaded');
     },
     shim: {

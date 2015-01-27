@@ -18,9 +18,9 @@ define([
         initialize: function() {
             this.collection = new NavCollection();
 
-            this.listenTo(this.collection, 'reset', this.removeSubViews);
             this.listenTo(this.collection, 'add', this.loadItems);
             broker.channel('session').subscribe('login', this.loadItems, this);
+            broker.channel('session').subscribe('logout', this.removeSubViews, this);
             Backbone.history.on('route', this.highlightNavItem, this);
         },
 

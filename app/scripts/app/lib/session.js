@@ -51,9 +51,9 @@ define([
         },
 
         logout: function() {
-            this.remove(this.models);
-            this.sync();
-            broker.channel('session').publish('logout',this);
+            this.at(0).destroy().then(function(){
+                broker.channel('session').publish('logout',this);
+            });
         }
     });
 

@@ -11,7 +11,6 @@ define([
 
         initialize: function() {
             broker.channel('nav').subscribe('register', this.registerItem, this);
-            broker.channel('session').subscribe('logout', this.reset, this);
         },
 
         registerItem: function(options){

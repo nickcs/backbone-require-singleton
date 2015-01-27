@@ -1,13 +1,13 @@
 define([
-    'jquery',
     'backbone',
+    'composer',
     'broker',
     'session',
     './views/nav',
     './views/body',
     './views/footer',
     './views/login'
-], function ($, Backbone, broker, session, NavView, BodyView, FooterView, LoginView) {
+], function (Backbone, composer, broker, session, NavView, BodyView, FooterView, LoginView) {
     'use strict';
 
     Backbone.View.prototype.attachToTemplate = true;
@@ -24,12 +24,18 @@ define([
         if (session.isLoggedIn()) {
             broker.channel('session').publish('login',session);
         } else {
-            broker.channel('container').publish('show', new LoginView());
+            broker.channel('session').publish('logout');
         }
     });
 
     broker.channel('session').subscribe('login', function(){
         Backbone.history.start();
+    });
+
+    broker.channel('session').subscribe('logout', function(){
+        Backbone.history.navigate('#');
+        Backbone.history.stop();
+        broker.channel('container').publish('show', new LoginView());
     });
 
     broker.start();
