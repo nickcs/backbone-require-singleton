@@ -9,7 +9,7 @@ define([
 
     var localStorage = new Backbone.LocalStorage('sessions');
 
-    var SessionModel = Backbone.Model.extend({
+    var UserModel = Backbone.Model.extend({
         localStorage: localStorage,
 
         hasCookie: function(){
@@ -25,15 +25,24 @@ define([
     var Session = Backbone.Collection.extend({
         localStorage: localStorage,
 
-        model: SessionModel,
+        model: UserModel,
 
         isLoggedIn: function() {
             return (this.length > 0);
         },
 
         login: function(options){
-            var model = new SessionModel({
+            var standardUser = {
                 userId: options.email,
+                accountId : '60',
+                accounts  : [{
+                  name: 'CSXGM',
+                  accountId: '60'
+                }],
+                products: []
+            };
+            var admin = {
+                userId: 'csxgm',
                 accountId : '60',
                 accounts  : [{
                   name: 'CoSo',
@@ -41,13 +50,21 @@ define([
                 }, {
                   name: 'CSXGM',
                   accountId: '60'
-                }]
-            });
+                }],
+                products: ['about']
+            };
+            var model = new UserModel(
+                (options.email === 'admin') ? admin : standardUser
+            );
             this.add(model);
             if (options.remember) {
                 model.save();
             }
             broker.channel('session').publish('login',this);
+        },
+
+        user: function() {
+            return this.at(0);
         },
 
         logout: function() {

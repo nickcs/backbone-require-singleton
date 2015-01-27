@@ -31,11 +31,15 @@ define([
 
         addNavItem: function(navItem) {
             if (session.isLoggedIn()) {
-                this.addSubView({
-                    view: new NavItemView({model: navItem}),
-                    selector: 'ul',
-                    location: 'preprend'
-                });
+                var prods = session.user().get('products');
+                var navProd = navItem.get('product');
+                if ((navProd && (prods.indexOf(navProd) > -1)) || !navProd) {
+                    this.addSubView({
+                        view: new NavItemView({model: navItem}),
+                        selector: 'ul',
+                        location: 'preprend'
+                    });
+                }
             }
         },
 

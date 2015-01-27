@@ -14,6 +14,7 @@ define([
                 title: 'About',
                 route: 'about',
                 handler: 'showAbout',
+                product: 'about',
                 zindex: 10
             });
             this.route('about', 'showAbout');
