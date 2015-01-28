@@ -1,6 +1,7 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var SERVER_PORT = 9100;
+var PROXY_SERVER = 'localhost';
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
@@ -66,10 +67,21 @@ module.exports = function (grunt) {
                 // change this to '0.0.0.0' to access the server from outside
                 hostname: 'localhost'
             },
+            proxies: [{
+                context: '/j_spring_security_check',
+                host: PROXY_SERVER,
+                port: 8080
+            },{
+                context: '/index.jsp',
+                host: PROXY_SERVER,
+                port: 8080
+            }],
             livereload: {
                 options: {
                     middleware: function (connect) {
+                        var proxyRequest = require('grunt-connect-proxy/lib/utils').proxyRequest;
                         return [
+                            proxyRequest,
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app)
@@ -307,6 +319,7 @@ module.exports = function (grunt) {
             'createDefaultTemplate',
             'jst',
             'compass:server',
+            'configureProxies:server',
             'connect:livereload',
             'open:server',
             'watch'
