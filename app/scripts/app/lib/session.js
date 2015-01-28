@@ -7,6 +7,29 @@ define([
 ], function($, Backbone, broker, Cookie, localstorage) {
     'use strict';
 
+    var standardUser = {
+        userId: 'csxgm',
+        accountId : '60',
+        accounts  : [{
+            name: 'CSXGM',
+            accountId: '60'
+        }],
+        products: []
+    };
+
+    var admin = {
+        userId: 'admin',
+        accountId : '60',
+        accounts  : [{
+            name: 'CoSo',
+            accountId: '10'
+        }, {
+            name: 'CSXGM',
+            accountId: '60'
+        }],
+        products: ['about']
+    };
+
     var localStorage = new Backbone.LocalStorage('sessions');
 
     var UserModel = Backbone.Model.extend({
@@ -31,36 +54,33 @@ define([
             return (this.length > 0);
         },
 
-        login: function(options){
-            var standardUser = {
-                userId: options.email,
-                accountId : '60',
-                accounts  : [{
-                  name: 'CSXGM',
-                  accountId: '60'
-                }],
-                products: []
-            };
-            var admin = {
-                userId: 'csxgm',
-                accountId : '60',
-                accounts  : [{
-                  name: 'CoSo',
-                  accountId: '10'
-                }, {
-                  name: 'CSXGM',
-                  accountId: '60'
-                }],
-                products: ['about']
-            };
-            var model = new UserModel(
-                (options.email === 'admin') ? admin : standardUser
-            );
-            this.add(model);
-            if (options.remember) {
-                model.save();
-            }
-            broker.channel('session').publish('login',this);
+        login: function(options, fields, callback) {
+            $.ajax({
+                type    : 'POST',
+                url     : '/j_spring_security_check',
+                data    : fields,
+                success: function(data) {
+                    if (data.indexOf('j_spring_security_check') != -1) {
+                        callback(new Error('password failed'));
+                    } else {
+                        $.ajax({url:'/index.jsp', success: function(data){
+                            var model = new UserModel(
+                                (options.email === 'admin') ? admin : standardUser
+                            );
+                            model.set('features', data);
+                            this.add(model);
+                            if (options.remember) {
+                                model.save();
+                            }
+                            broker.channel('session').publish('login',this);
+                            callback(null,data);
+                        }.bind(this)});
+                    }
+                }.bind(this),
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    callback(errorThrown);
+                }.bind(this)
+            });
         },
 
         user: function() {

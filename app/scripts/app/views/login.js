@@ -25,7 +25,12 @@ define([
 
         signIn: function(event) {
             event.preventDefault();
-            session.login(this.serializeForm('form'));
+            var options = this.serializeForm('form');
+            session.login(options, this.$('form').serialize(), function(err, result){
+                if (err) {
+                    this.$('.alert').removeClass('hidden');
+                }
+            });
         }
     });
 

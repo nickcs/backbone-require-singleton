@@ -5,14 +5,15 @@
                 <h3 class="panel-title">Please Sign In</h3>
             </div>
             <div class="panel-body">
+                <div class="alert alert-danger hidden" role="alert">Email or Password were incorrect.</div>
                 <form role="form">
                     <fieldset>
                         <div class="form-group">
-                            <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus value="<%= email %>">
+                            <input class="form-control" placeholder="E-mail" name="j_username" type="email" autofocus value="<%= email %>">
                             <span class="help-block">Enter admin to see all menu items.</span>
                         </div>
                         <div class="form-group">
-                            <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                            <input class="form-control" placeholder="Password" name="j_password" type="password" value="">
                         </div>
                         <div class="checkbox">
                             <label>
